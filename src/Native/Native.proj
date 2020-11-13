@@ -37,13 +37,13 @@
 
   <PropertyGroup>
     <NativeLibPrefix Condition="'$(OS)' != 'Windows_NT'">lib</NativeLibPrefix>
-    <NativeLibExtension Condition="'$(OS)' == 'Windows_NT'">.dll</NativeLibExtension>
-    <NativeLibExtension Condition="'$(OS)' == 'linux'">.so</NativeLibExtension>
-    <NativeLibExtension Condition="$([MSBuild]::IsOSPlatform('osx'))">.dylib</NativeLibExtension>
+    <LibExtension Condition="'$(OS)' == 'Windows_NT'">.dll</LibExtension>
+		<LibExtension Condition="$([MSBuild]::IsOSPlatform('Linux'))">.so</LibExtension>
+		<LibExtension Condition="$([MSBuild]::IsOSPlatform('OSX'))">.dylib</LibExtension>
 
     <NativeLibSymbolExtension Condition="'$(OS)' == 'Windows_NT'">.pdb</NativeLibSymbolExtension>
-    <NativeLibSymbolExtension Condition="'$(OS)' != 'Windows_NT'">.so.dbg</NativeLibSymbolExtension>
-    <NativeLibSymbolExtension Condition="$([MSBuild]::IsOSPlatform('osx'))">.dylib.dwarf</NativeLibSymbolExtension>
+    <NativeLibSymbolExtension Condition="$([MSBuild]::IsOSPlatform('Linux'))">.so.dbg</NativeLibSymbolExtension>
+    <NativeLibSymbolExtension Condition="$([MSBuild]::IsOSPlatform('OSX'))">.dylib.dwarf</NativeLibSymbolExtension>
   </PropertyGroup>
 
   <Target Name="BuildNativeUnix"

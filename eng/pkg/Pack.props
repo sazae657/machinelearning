@@ -22,8 +22,8 @@
     <PackageTags>ML.NET ML Machine Learning</PackageTags>
 
     <LibExtension Condition="'$(OS)' == 'Windows_NT'">.dll</LibExtension>
-		<LibExtension Condition="'$(OS)' == 'linux'">.so</LibExtension>
-		<LibExtension Condition="$([MSBuild]::IsOSPlatform('osx'))">.dylib</LibExtension>
+		<LibExtension Condition="$([MSBuild]::IsOSPlatform('Linux'))">.so</LibExtension>
+		<LibExtension Condition="$([MSBuild]::IsOSPlatform('OSX'))">.dylib</LibExtension>
   </PropertyGroup>
 
   <ItemGroup>
