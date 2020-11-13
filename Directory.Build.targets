@@ -19,11 +19,11 @@
 		<OutputPath Condition="'$(OutputPath)'==''">$(BinDir)$(MSBuildProjectName)\Debug</OutputPath>
 	</PropertyGroup>
 
-		<ItemGroup>
+	<ItemGroup>
 		<NativeAssemblyReference>
 			<FullAssemblyPath>$(NativeOutputPath)$(LibPrefix)%(NativeAssemblyReference.Identity)$(LibExtension)</FullAssemblyPath>
 		</NativeAssemblyReference>
-		</ItemGroup>
+	</ItemGroup>
 
 		<Copy SourceFiles = "@(NativeAssemblyReference->'%(FullAssemblyPath)')"
 			DestinationFolder="$(OutDir)"
