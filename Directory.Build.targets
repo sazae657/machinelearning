@@ -6,7 +6,7 @@
     <PropertyGroup>
 		<LibPrefix Condition="'$(OS)' != 'Windows_NT'">lib</LibPrefix>
 		<LibExtension Condition="'$(OS)' == 'Windows_NT'">.dll</LibExtension>
-		<LibExtension Condition="'$(OS)' != 'Windows_NT'">.so</LibExtension>
+		<LibExtension Condition="'$(OS)' == 'linux'">.so</LibExtension>
 		<LibExtension Condition="$([MSBuild]::IsOSPlatform('osx'))">.dylib</LibExtension>
 
 		<TargetArchitecture Condition="'$(Platform)' == ''">x64</TargetArchitecture>

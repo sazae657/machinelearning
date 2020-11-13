@@ -38,7 +38,7 @@
   <PropertyGroup>
     <NativeLibPrefix Condition="'$(OS)' != 'Windows_NT'">lib</NativeLibPrefix>
     <NativeLibExtension Condition="'$(OS)' == 'Windows_NT'">.dll</NativeLibExtension>
-    <NativeLibExtension Condition="'$(OS)' != 'Windows_NT'">.so</NativeLibExtension>
+    <NativeLibExtension Condition="'$(OS)' == 'linux'">.so</NativeLibExtension>
     <NativeLibExtension Condition="$([MSBuild]::IsOSPlatform('osx'))">.dylib</NativeLibExtension>
 
     <NativeLibSymbolExtension Condition="'$(OS)' == 'Windows_NT'">.pdb</NativeLibSymbolExtension>
