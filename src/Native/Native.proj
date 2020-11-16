@@ -38,12 +38,12 @@
   <PropertyGroup>
     <NativeLibPrefix Condition="'$(OS)' != 'Windows_NT'">lib</NativeLibPrefix>
     <NativeLibExtension Condition="'$(OS)' == 'Windows_NT'">.dll</NativeLibExtension>
-		<NativeLibExtension Condition="$([MSBuild]::IsOSPlatform('Linux'))">.so</NativeLibExtension>
-		<NativeLibExtension Condition="$([MSBuild]::IsOSPlatform('OSX'))">.dylib</NativeLibExtension>
+		<NativeLibExtension Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">.so</NativeLibExtension>
+		<NativeLibExtension Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">.dylib</NativeLibExtension>
 
     <NativeLibSymbolExtension Condition="'$(OS)' == 'Windows_NT'">.pdb</NativeLibSymbolExtension>
-    <NativeLibSymbolExtension Condition="$([MSBuild]::IsOSPlatform('Linux'))">.so.dbg</NativeLibSymbolExtension>
-    <NativeLibSymbolExtension Condition="$([MSBuild]::IsOSPlatform('OSX'))">.dylib.dwarf</NativeLibSymbolExtension>
+    <NativeLibSymbolExtension Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">.so.dbg</NativeLibSymbolExtension>
+    <NativeLibSymbolExtension Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">.dylib.dwarf</NativeLibSymbolExtension>
   </PropertyGroup>
 
   <Target Name="BuildNativeUnix"

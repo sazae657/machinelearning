@@ -16,8 +16,8 @@
     <NativeAssetsBuiltPath>$(BaseOutputPath)$(TargetArchitecture).$(Configuration)</NativeAssetsBuiltPath>
 
     <PackageRid Condition="'$(OS)' == 'Windows_NT'">win</PackageRid>
-    <PackageRid Condition="'$(OS)' != 'Windows_NT'">linux</PackageRid>
-    <PackageRid Condition="$([MSBuild]::IsOSPlatform('osx'))">osx</PackageRid>
+    <PackageRid Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">linux</PackageRid>
+    <PackageRid Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">osx</PackageRid>
     <PackageRid>$(PackageRid)-$(TargetArchitecture)</PackageRid>
   </PropertyGroup>
 
