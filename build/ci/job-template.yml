@@ -69,7 +69,7 @@ jobs:
     - ${{ if and( eq(parameters.nightlyBuild, 'true'), eq(parameters.pool.name, 'Hosted Ubuntu 1604')) }}:
       - bash: echo "##vso[task.setvariable variable=LD_LIBRARY_PATH]$(nightlyBuildRunPath):$LD_LIBRARY_PATH"
         displayName: Set LD_LIBRARY_PATH for Ubuntu and CentOS to locate Native shared library in current running path
-    - script: ${{ parameters.buildScript }} -configuration $(_configuration) -ci /p:TargetArchitecture=${{ parameters.architecture }} /p:RestorePackagesPath=packages /p:NUGET_PACKAGES=$(Build.SourcesDirectory)/packages
+    - script: ${{ parameters.buildScript }} -configuration $(_configuration) -ci /p:TargetArchitecture=${{ parameters.architecture }} /p:RestorePackagesPath=$(Build.SourcesDirectory)\packages /p:NUGET_PACKAGES=$(Build.SourcesDirectory)\packages
       displayName: Build
     - ${{ if eq(parameters.pool.name, 'Hosted macOS') }}:
       - task: Bash@3
@@ -89,9 +89,6 @@ jobs:
           targetType: inline
           script: Get-ChildItem -Path  '$(Build.SourcesDirectory)\packages\*\runtimes\*' -Recurse | Select -ExpandProperty FullName | Where {$_ -notlike '*\win-*'} | sort length -Descending | Remove-Item -Recurse -Confirm:$false -Force
         displayName: Clean up non-Windows runtime folders of NuGet Packages to save disk space
-    - ${{ if eq(parameters.buildScript, './build.sh') }}:
-      - script: cp -r $(Build.SourcesDirectory)/.packages/. $(Build.SourcesDirectory)/packages/
-        displayName: Move extra contents of .packages/ into packages/ 
     - ${{ if eq(parameters.nightlyBuild, 'true') }}:
       - script: $(dotnetPath) restore $(nightlyBuildProjPath)
         displayName: Restore nightly build project
@@ -110,16 +107,16 @@ jobs:
           displayName: Clean up useless project
       - script: $(dotnetPath) msbuild -restore $(nightlyBuildProjPath) /p:ReferenceTypeForTestFramework="Nuget" -configuration $(_configuration) /p:TargetArchitecture=${{ parameters.architecture }}
         displayName: Build Nightly-Build Project with latest package versions
-      - script: ${{ parameters.buildScript }} -configuration $(_configuration) -runnightlybuildtests /p:Build=false /p:TargetArchitecture=${{ parameters.architecture }} /p:RestorePackagesPath=packages /p:NUGET_PACKAGES=$(Build.SourcesDirectory)/packages
+      - script: ${{ parameters.buildScript }} -configuration $(_configuration) -runnightlybuildtests /p:Build=false /p:TargetArchitecture=${{ parameters.architecture }} /p:RestorePackagesPath=$(Build.SourcesDirectory)\packages /p:NUGET_PACKAGES=$(Build.SourcesDirectory)\packages
         displayName: Run Nightly Build Tests
     - ${{ if eq(parameters.nightlyBuild, 'false') }}:
       - ${{ if eq(parameters.innerLoop, 'false') }}:
         - ${{ if and(eq(parameters.runSpecific, 'false'), eq(parameters.useVSTestTask, 'false')) }}:
           # TODO: Code coverage needs to be fixed.
-          - script: ${{ parameters.buildScript }} -configuration $(_configuration) -test -ci /p:Build=false /p:TargetArchitecture=${{ parameters.architecture }} #-coverage=${{ parameters.codeCoverage }}
+          - script: ${{ parameters.buildScript }} -configuration $(_configuration) -test -ci /p:Build=false #-coverage=${{ parameters.codeCoverage }}
             displayName: Run All Tests.
         - ${{ if and(eq(parameters.runSpecific, 'true'), eq(parameters.useVSTestTask, 'false')) }}:
-          - script: ${{ parameters.buildScript }} -configuration $(_configuration) -test -ci /p:Build=false /p:TargetArchitecture=${{ parameters.architecture }} /p:TestRunnerAdditionalArguments='-trait$(spaceValue)Category=RunSpecificTest' /p:RestorePackagesPath=packages /p:NUGET_PACKAGES=$(Build.SourcesDirectory)/packages #-coverage=${{ parameters.codeCoverage }}
+          - script: ${{ parameters.buildScript }} -configuration $(_configuration) -test -ci /p:Build=false /p:TestRunnerAdditionalArguments='-trait$(spaceValue)Category=RunSpecificTest' /p:RestorePackagesPath=$(Build.SourcesDirectory)\packages /p:NUGET_PACKAGES=$(Build.SourcesDirectory)\packages #-coverage=${{ parameters.codeCoverage }}
             displayName: Run Specific Tests.
         - ${{ if and(eq(parameters.buildScript, 'build.cmd'), eq(parameters.useVSTestTask, 'true')) }}:
           - task: VSTest@2
@@ -143,7 +140,7 @@ jobs:
               collectDumpOn: onAbortOnly
               publishRunAttachments: true
       - ${{ if eq(parameters.innerLoop, 'true') }}:
-        - script: ${{ parameters.buildScript }} -configuration $(_configuration) -test -ci /p:Build=false /p:TargetArchitecture=${{ parameters.architecture }} /p:TestRunnerAdditionalArguments='-notrait$(spaceValue)Category=SkipInCI' /p:RestorePackagesPath=packages /p:NUGET_PACKAGES=$(Build.SourcesDirectory)/packages #-coverage=${{ parameters.codeCoverage }}
+        - script: ${{ parameters.buildScript }} -configuration $(_configuration) -test -ci /p:Build=false /p:TestRunnerAdditionalArguments='-notrait$(spaceValue)Category=SkipInCI' /p:RestorePackagesPath=$(Build.SourcesDirectory)\packages /p:NUGET_PACKAGES=$(Build.SourcesDirectory)\packages #-coverage=${{ parameters.codeCoverage }}
           displayName: Run CI Tests.
     - script: $(dotnetPath) msbuild -restore build/Codecoverage.proj
       displayName: Upload coverage to codecov.io
@@ -191,5 +188,5 @@ jobs:
         artifactName: ${{ parameters.name }} $(_config_short)
         artifactType: container
     - ${{ if eq(parameters.nightlyBuild, 'false') }}:
-      - script: ${{ parameters.buildScript }} -configuration $(_configuration) -pack -ci /p:nb=true /p:Build=false /p:TargetArchitecture=${{ parameters.architecture }} /p:RestorePackagesPath=packages /p:NUGET_PACKAGES=$(Build.SourcesDirectory)/packages
+      - script: ${{ parameters.buildScript }} /p:Build=false -pack -ci -configuration $(_configuration) /p:RestorePackagesPath=$(Build.SourcesDirectory)\packages /p:NUGET_PACKAGES=$(Build.SourcesDirectory)\packages
         displayName: Build NuGet Packages
