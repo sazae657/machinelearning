@@ -1,5 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Disable usage of Microsoft.NETFramework.ReferenceAssemblies.net461 in .NET Framework v4.6.1 -->
+  <!-- builds as netstandard.dll is not copied over to the Microsoft.ML.FSharp.Tests project. -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net461'">
+    <UsingToolNetFrameworkReferenceAssemblies>false</UsingToolNetFrameworkReferenceAssemblies>
+  </PropertyGroup>
+
   <PropertyGroup>
     <NoWarn>2003;$(NoWarn)</NoWarn>
     <PublicSign>false</PublicSign>

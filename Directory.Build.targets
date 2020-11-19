@@ -4,36 +4,47 @@
 
   <Target Name="CopyNativeAssembiles" AfterTargets="CopyFilesToOutputDirectory">
     <PropertyGroup>
-		<LibPrefix Condition="'$(OS)' != 'Windows_NT'">lib</LibPrefix>
-		<LibExtension Condition="'$(OS)' == 'Windows_NT'">.dll</LibExtension>
-		<LibExtension Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">.so</LibExtension>
-		<LibExtension Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">.dylib</LibExtension>
+      <LibPrefix Condition="'$(OS)' != 'Windows_NT'">lib</LibPrefix>
+      <LibExtension Condition="'$(OS)' == 'Windows_NT'">.dll</LibExtension>
+      <LibExtension Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">.so</LibExtension>
+      <LibExtension Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">.dylib</LibExtension>
 
-		<TargetArchitecture Condition="'$(Platform)' == ''">x64</TargetArchitecture>
-		<NativeTargetArchitecture Condition="'$(NativeTargetArchitecture)' == ''">$(TargetArchitecture)</NativeTargetArchitecture>
-		<BinDir Condition="'$(BinDir)'==''">$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'artifacts', 'bin'))</BinDir>
-		<NativeOutputPath>$(BinDir)Native\$(NativeTargetArchitecture).$(Configuration)\</NativeOutputPath>
+      <TargetArchitecture Condition="'$(Platform)' == ''">x64</TargetArchitecture>
+      <NativeTargetArchitecture Condition="'$(NativeTargetArchitecture)' == ''">$(TargetArchitecture)</NativeTargetArchitecture>
+      <BinDir Condition="'$(BinDir)'==''">$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'artifacts', 'bin'))</BinDir>
+      <NativeOutputPath>$(BinDir)Native\$(NativeTargetArchitecture).$(Configuration)\</NativeOutputPath>
 
-		<Platform Condition="'$(Platform)'==''">AnyCPU</Platform>
-		<PlatformConfig>$(Platform).$(Configuration)</PlatformConfig>
-		<OutputPath Condition="'$(OutputPath)'==''">$(BinDir)$(MSBuildProjectName)\Debug</OutputPath>
-	</PropertyGroup>
+      <Platform Condition="'$(Platform)'==''">AnyCPU</Platform>
+      <PlatformConfig>$(Platform).$(Configuration)</PlatformConfig>
+      <OutputPath Condition="'$(OutputPath)'==''">$(BinDir)$(MSBuildProjectName)\Debug</OutputPath>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<NativeAssemblyReference>
-			<FullAssemblyPath>$(NativeOutputPath)$(LibPrefix)%(NativeAssemblyReference.Identity)$(LibExtension)</FullAssemblyPath>
-		</NativeAssemblyReference>
-	</ItemGroup>
+    <ItemGroup>
+      <NativeAssemblyReference>
+        <FullAssemblyPath>$(NativeOutputPath)$(LibPrefix)%(NativeAssemblyReference.Identity)$(LibExtension)</FullAssemblyPath>
+      </NativeAssemblyReference>
+    </ItemGroup>
 
-		<Copy SourceFiles = "@(NativeAssemblyReference->'%(FullAssemblyPath)')"
-			DestinationFolder="$(OutDir)"
-			OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
-			Retries="$(CopyRetryCount)"
-			RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"
-			UseHardlinksIfPossible="$(CreateHardLinksForPublishFilesIfPossible)"
-			UseSymboliclinksIfPossible="$(CreateSymbolicLinksForPublishFilesIfPossible)">
-		<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
-		</Copy>
+      <Copy SourceFiles = "@(NativeAssemblyReference->'%(FullAssemblyPath)')"
+        DestinationFolder="$(OutDir)"
+          OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"
+          UseHardlinksIfPossible="$(CreateHardLinksForPublishFilesIfPossible)"
+          UseSymboliclinksIfPossible="$(CreateSymbolicLinksForPublishFilesIfPossible)">
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+      </Copy>
+  </Target>
+
+  <!-- Copy netstandard.dll in .NET Framework v4.6.1 builds to the appropiate .dotnet FSharp folder as the dll is not copied -->
+  <!-- over to the Microsoft.ML.FSharp.Tests project. -->
+  <Target Name="CopyNetStandardDLL" Condition="'$(TargetFramework)' == 'net461'" AfterTargets="CopyFilesToOutputDirectory">
+    <ItemGroup>
+      <NetStandardDllFile Include="$(RepoRoot).dotnet\sdk\*\Microsoft\Microsoft.NET.Build.Extensions\net461\lib\netstandard.dll"/>
+      <NetStandardDllDestinationFiles Include="$(RepoRoot).dotnet\sdk\*\FSharp\*"/>
+      <NetStandardDllDestination Include="@(NetStandardDllDestinationFiles->'%(RootDir)%(Directory)'->Distinct())"/>
+    </ItemGroup>
+    <Copy SourceFiles = "@(NetStandardDllFile)" DestinationFolder="%(NetStandardDllDestination.FullPath)"/>
   </Target>
 
 </Project>
