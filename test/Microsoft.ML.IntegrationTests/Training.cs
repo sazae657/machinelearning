@@ -350,9 +350,6 @@ namespace Microsoft.ML.IntegrationTests
         public void ContinueTrainingPoissonRegression()
         {
             var mlContext = new MLContext(seed: 1);
-            var num = 10;
-            if (num == 10)
-                throw new System.Exception("hi");
 
             // Get the dataset.
             var data = mlContext.Data.LoadFromTextFile<HousingRegression>(TestCommon.GetDataPath(DataDir, TestDatasets.housing.trainFilename),
