@@ -110,6 +110,9 @@ jobs:
         displayName: Build Nightly-Build Project with latest package versions
         #MYTODO: Should I put /p:TargetArchitecture?
         #MYTODO: Should I delete any other reference to run-night-build-tests.proj on ML.NET?
+      - ${{ if and( eq(parameters.nightlyBuild, 'true'), eq(parameters.pool.name, 'Hosted Ubuntu 1604')) }}:
+        - script: ls $(nightlyBuildRunPath)
+          displayName: Debug CentOS bug
       - script: $(dotnetPath) msbuild $(runNightlyBuildProj) /t:RunNightlyBuildTests /p:Configuration=$(_configuration)
         displayName: Run Nightly Build Tests
     - ${{ if eq(parameters.nightlyBuild, 'false') }}:
