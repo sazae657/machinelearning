@@ -101,7 +101,7 @@ jobs:
         - powershell: |
                     Get-ChildItem -Path  '.\artifacts\bin\*' -Recurse |
                     Select -ExpandProperty FullName |
-                    Where {$_ -NotMatch '.*\\Microsoft\.ML\.NightlyBuild\.Tests\.\*|\.\*\\Native.*'} |
+                    Where {$_ -NotMatch '.*\\Microsoft\.ML\.NightlyBuild\.Tests.*|.*\\Native.*'} |
                     sort length -Descending |
                     Remove-Item -force
                     Write-Output "Done cleaning up usless project..."
