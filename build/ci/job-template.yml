@@ -101,7 +101,7 @@ jobs:
         - powershell: |
                     Get-ChildItem -Path  '.\artifacts\bin\*' -Recurse |
                     Select -ExpandProperty FullName |
-                    Where {$_ -NotMatch '.*\\Microsoft\.ML\.NightlyBuild\.Tests\.\*|\.\*\\Native\\.*'} |
+                    Where {$_ -NotMatch '.*\\Microsoft\.ML\.NightlyBuild\.Tests\.\*|\.\*\\Native.*'} |
                     sort length -Descending |
                     Remove-Item -force
                     Write-Output "Done cleaning up usless project..."
@@ -110,6 +110,9 @@ jobs:
         displayName: Build Nightly-Build Project with latest package versions
         #MYTODO: Should I put /p:TargetArchitecture?
         #MYTODO: Should I delete any other reference to run-night-build-tests.proj on ML.NET?
+      - ${{ if and( eq(parameters.nightlyBuild, 'true'), eq(parameters.pool.name, 'Hosted Ubuntu 1604')) }}:
+        - script: echo "$(LD_LIBRARY_PATH)"
+          displayName: Debug CentOS bug
       - ${{ if and( eq(parameters.nightlyBuild, 'true'), eq(parameters.pool.name, 'Hosted Ubuntu 1604')) }}:
         - script: ls $(nightlyBuildRunPath)
           displayName: Debug CentOS bug
