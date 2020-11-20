@@ -36,15 +36,4 @@
       </Copy>
   </Target>
 
-  <!-- Copy netstandard.dll in .NET Framework v4.6.1 builds to the appropiate .dotnet FSharp folder as the dll is not copied -->
-  <!-- over to the Microsoft.ML.FSharp.Tests project. -->
-  <Target Name="CopyNetStandardDLL" Condition="'$(TargetFramework)' == 'net461'" AfterTargets="CopyFilesToOutputDirectory">
-    <ItemGroup>
-      <NetStandardDllFile Include="$(RepoRoot).dotnet\sdk\*\Microsoft\Microsoft.NET.Build.Extensions\net461\lib\netstandard.dll"/>
-      <NetStandardDllDestinationFiles Include="$(RepoRoot).dotnet\sdk\*\FSharp\*"/>
-      <NetStandardDllDestination Include="@(NetStandardDllDestinationFiles->'%(RootDir)%(Directory)'->Distinct())"/>
-    </ItemGroup>
-    <Copy SourceFiles = "@(NetStandardDllFile)" DestinationFolder="%(NetStandardDllDestination.FullPath)"/>
-  </Target>
-
 </Project>
