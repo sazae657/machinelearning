@@ -53,13 +53,6 @@
     <ExcludeByFile></ExcludeByFile>
   </PropertyGroup>
 
-  <Target Name="OuterInstrumentModulesNoBuild" BeforeTargets="RunTests" Condition="'$(IsUnitTestProject)' == 'true' AND '$(TargetFramework)' == ''">
-    <MSBuild
-      Projects="$(MSBuildProjectFullPath)"
-      Targets="InnerInstrumentModulesNoBuild"
-      Properties="TargetFramework=%(_TargetFramework.Identity)" />
-  </Target>
-
   <Target Name="OuterGenerateCoverageResult" BeforeTargets="Test" Condition="'$(IsUnitTestProject)' == 'true' AND '$(TargetFramework)' == ''">
     <MSBuild
       Projects="$(MSBuildProjectFullPath)"
