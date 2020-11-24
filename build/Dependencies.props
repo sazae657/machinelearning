@@ -42,8 +42,8 @@
   <!-- Build/infrastructure Dependencies -->
   <PropertyGroup>
     <PublishSymbolsPackageVersion>1.0.0-beta-62824-02</PublishSymbolsPackageVersion>
-    <CodecovVersion>1.9.0</CodecovVersion>
-    <CoverletCollectorVersion>1.2.1</CoverletCollectorVersion>
+    <CodecovVersion>1.12.3</CodecovVersion>
+    <CoverletVersion>2.9.0</CoverletVersion>
     <ReportGeneratorVersion>4.3.6</ReportGeneratorVersion>
     <MicrosoftDotNetApiCompatPackageVersion>1.0.0-beta.19225.5</MicrosoftDotNetApiCompatPackageVersion>
   </PropertyGroup>

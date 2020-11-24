@@ -5,7 +5,7 @@
 jobs:
 - template: /build/ci/job-template.yml
   parameters:
-    name: Windows_x64
+    name: Centos_x64
     buildScript: build.cmd
     customMatrixes:
       Build_Debug:
