@@ -15,7 +15,11 @@ namespace Microsoft.ML.PerformanceTests
 {
     public class RecommendedConfig : ManualConfig
     {
-        protected static readonly IReadOnlyList<MsBuildArgument> msbuildArguments = new List<MsBuildArgument>() { new MsBuildArgument($"/p:Configuration={GetBuildConfigurationName()}") };
+        protected static readonly IReadOnlyList<MsBuildArgument> msbuildArguments = new List<MsBuildArgument>() {
+            new MsBuildArgument($"/p:Configuration={GetBuildConfigurationName()}"),
+            new MsBuildArgument($"/p:verbosity=diagnostic"),
+            new MsBuildArgument($"--disable-parallel")
+        };
 
         public RecommendedConfig()
         {
